@@ -22,6 +22,7 @@ module.exports = function (app, config) {
         app.use(express.bodyParser());
         app.use(express.methodOverride());
         app.use(express.json());
+        app.use(express.session());
         app.use(app.router);
     });
 
