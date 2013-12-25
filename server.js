@@ -1,4 +1,5 @@
-var express = require("express"),
+var app,
+    express = require("express"),
     http = require("http"),
     fs = require("fs"),
     env = process.env.NODE_ENV || "development",
@@ -11,7 +12,7 @@ fs.readdirSync(__dirname + "/app/mod").forEach(function (file) {
     }
 });
 
-var app = express();
+app = express();
 
 require("./config/express")(app, config);
 require("./config/routes")(app);
