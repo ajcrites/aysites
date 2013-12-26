@@ -45,6 +45,7 @@ module.exports = function (db) {
 
             return dfd.promise;
         },
+
         find: function (query) {
             return collection.find(query);
         }

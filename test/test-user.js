@@ -49,4 +49,33 @@ describe("User", function () {
             });
         });
     });
+
+    describe("read", function () {
+        before(function (done) {
+            User.create("barze", "bar", "baz@glan.com").done(function () {
+                done();
+            });
+        });
+
+        it("should find created user", function (done) {
+            User.find({name: "fooze"}).done(function (result) {
+                result.name.should.equal("fooze");
+                done();
+            });
+        });
+
+        it("should find multiple users", function (done) {
+            User.find({email: "baz@glan.com"}).done(function (results) {
+                results.length.should.equal(2);
+                done();
+            });
+        });
+
+        it("should not find a missing user", function (done) {
+            User.find({name: "this does not exist"}).done(function (results) {
+                should.not.exist(results);
+                done();
+            });
+        });
+    });
 });
