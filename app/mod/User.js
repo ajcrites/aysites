@@ -8,14 +8,14 @@ module.exports = function (db) {
 
     return {
         create: function (name, passwd, email) {
-            var dfd = new mongoise.Deferred();
+            var dfd = new mongoise.Deferred;
 
             if (name.length < 5) {
                 dfd.reject("Name must be at least 5 characters long.");
             }
             else {
-                collection.find({name: name}).done(function (result) {
-                    if (result) {
+                collection.find({name: name}).toArray().done(function (result) {
+                    if (result.length) {
                         dfd.reject("Name must be unique.  Provided name exists.");
                     }
                     else {
@@ -47,7 +47,7 @@ module.exports = function (db) {
         },
 
         find: function (query) {
-            return collection.find(query);
+            return collection.find(query).toArray();
         }
     }
 };

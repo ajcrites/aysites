@@ -30,7 +30,7 @@ describe("User", function () {
         it("should create a new user", function (done) {
             User.create("fooze", "bar", "baz@glan.com").done(function () {
                 User.find({name: "fooze"}).done(function (results) {
-                    results.name.should.equal("fooze");
+                    results[0].name.should.equal("fooze");
                     done();
                 }).fail(function (err) {
                     should.not.exist(err);
@@ -59,7 +59,7 @@ describe("User", function () {
 
         it("should find created user", function (done) {
             User.find({name: "fooze"}).done(function (result) {
-                result.name.should.equal("fooze");
+                result[0].name.should.equal("fooze");
                 done();
             });
         });
@@ -73,7 +73,7 @@ describe("User", function () {
 
         it("should not find a missing user", function (done) {
             User.find({name: "this does not exist"}).done(function (results) {
-                should.not.exist(results);
+                results.should.be.empty;
                 done();
             });
         });
