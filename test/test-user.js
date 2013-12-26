@@ -10,7 +10,9 @@ describe("User", function () {
     before(function (done) {
         mongoise.connect(config.db.uri).then(function (db) {
             User = require("../app/mod/User")(db);
-            done();
+            mongoise.dbc.collection("user").drop(function () {
+                mongoise.dbc.createCollection("user", done);
+            });
         });
     });
 
@@ -28,7 +30,7 @@ describe("User", function () {
         it("should create a new user", function (done) {
             User.create("fooze", "bar", "baz@glan.com").then(function () {
                 User.find({name: "fooze"}).then(function (results) {
-                    results.length.should.equal(1);
+                    results.name.should.equal("fooze");
                     done();
                 }).fail(function (err) {
                     should.not.exist(err);

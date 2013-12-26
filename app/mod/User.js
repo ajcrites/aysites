@@ -14,8 +14,8 @@ module.exports = function (db) {
                 dfd.reject("Name must be at least 5 characters long.");
             }
             else {
-                collection.find({name: name}).then(function (results) {
-                    if (results.length) {
+                collection.find({name: name}).then(function (result) {
+                    if (result) {
                         dfd.reject("Name must be unique.  Provided name exists.");
                     }
                     else {
@@ -29,8 +29,12 @@ module.exports = function (db) {
                                     passwd: digest,
                                     email: email
                                 })
-                                    .then(dfd.resolve)
-                                    .fail(dfd.reject);
+                                    .then(function () {
+                                        dfd.resolve.apply(dfd, arguments);
+                                    })
+                                    .fail(function () {
+                                        dfd.reject.apply(dfd.arguments);
+                                    });
                             }
                         });
                     }
@@ -41,8 +45,8 @@ module.exports = function (db) {
 
             return dfd.promise;
         },
-        find: function (query, done) {
-            collection.find(query).toArray(done);
+        find: function (query) {
+            return collection.find(query);
         }
     }
 };
