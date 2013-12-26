@@ -3,11 +3,11 @@ var path = require('path')
 
 module.exports = {
     development: {
-        db: "mongodb://localhost/resource-manager_devel",
+        db: "mongodb://localhost/aysites_devel",
         root: root
     },
     test: {
-        db: "mongodb://localhost/resource-manager_test",
+        db: "mongodb://localhost/aysites_test",
         root: root
     },
     production: {
