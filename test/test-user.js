@@ -8,7 +8,7 @@ var env = process.env.NODE_ENV || "test",
 
 describe("User", function () {
     before(function (done) {
-        mongoise.connect(config.db.uri).then(function (db) {
+        mongoise.connect(config.db.uri).done(function (db) {
             User = require("../app/mod/User")(db);
             mongoise.dbc.collection("user").drop(function () {
                 mongoise.dbc.createCollection("user", done);
@@ -21,15 +21,15 @@ describe("User", function () {
             User.create("foo", "bar", "baz@glan.com").fail(function (err) {
                 should.exist(err);
                 done();
-            }).then(function (r) {
+            }).done(function (r) {
                 should.not.exist(r);
                 done();
             });
         });
 
         it("should create a new user", function (done) {
-            User.create("fooze", "bar", "baz@glan.com").then(function () {
-                User.find({name: "fooze"}).then(function (results) {
+            User.create("fooze", "bar", "baz@glan.com").done(function () {
+                User.find({name: "fooze"}).done(function (results) {
                     results.name.should.equal("fooze");
                     done();
                 }).fail(function (err) {
@@ -43,7 +43,7 @@ describe("User", function () {
             User.create("fooze", "bar", "baz@glan.com").fail(function (err) {
                 should.exist(err);
                 done();
-            }).then(function (r) {
+            }).done(function (r) {
                 should.not.exist(r);
                 done();
             });

@@ -14,7 +14,7 @@ module.exports = function (db) {
                 dfd.reject("Name must be at least 5 characters long.");
             }
             else {
-                collection.find({name: name}).then(function (result) {
+                collection.find({name: name}).done(function (result) {
                     if (result) {
                         dfd.reject("Name must be unique.  Provided name exists.");
                     }
@@ -29,7 +29,7 @@ module.exports = function (db) {
                                     passwd: digest,
                                     email: email
                                 })
-                                    .then(function () {
+                                    .done(function () {
                                         dfd.resolve.apply(dfd, arguments);
                                     })
                                     .fail(function () {
