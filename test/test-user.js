@@ -5,6 +5,7 @@ var env = process.env.NODE_ENV || "test",
     mongoise = require("mongoise"),
     User
 ;
+mongoise = new mongoise.Mongoise;
 
 describe("User", function () {
     before(function (done) {

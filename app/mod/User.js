@@ -3,12 +3,15 @@ module.exports = function (db) {
         ObjectID = mongodb.ObjectID,
         bcrypt = require("bcrypt"),
         mongoise = require("mongoise"),
-        collection = mongoise.collection("user")
+        Deferred = mongoise.Deferred,
+        collection
     ;
+    mongoise = new mongoise.Mongoise(db);
+    collection = mongoise.collection("user")
 
     return {
         create: function (name, passwd, email) {
-            var dfd = new mongoise.Deferred;
+            var dfd = new Deferred;
 
             if (name.length < 5) {
                 dfd.reject("Name must be at least 5 characters long.");
