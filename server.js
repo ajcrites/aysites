@@ -4,10 +4,11 @@ var app,
     fs = require("fs"),
     env = process.env.NODE_ENV || "development",
     config = require("./config/config")[env],
-    mongoise = require("mongoise")
+    mongoisePackage = require("mongoise"),
+    mongoise = new mongoisePackage.Mongoise
 ;
 
-mongoise.connect(config.db.uri).then(function () {
+mongoise.connect(config.db.uri).done(function () {
     fs.readdirSync(__dirname + "/app/mod").forEach(function (file) {
         if (~file.indexOf(".js")) {
             require(__dirname + "/app/mod/" + file)(mongoise.dbc);
