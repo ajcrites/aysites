@@ -1,10 +1,7 @@
-var index = require("../app/cont/index");
-
 module.exports = function (app, config) {
-    var index = require("../app/cont/index")(config);
-        auth = require("../app/cont/auth")(config)
-    ;
-    app.get("/", index.index);
+    var c = config.controllers;
 
-    app.post("/auth/login", auth.login.post);
+    app.get("/", c.index.index);
+
+    app.post("/auth/login", c.auth.login.post);
 };

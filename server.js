@@ -1,5 +1,4 @@
 var app,
-    models = {},
     express = require("express"),
     http = require("http"),
     fs = require("fs"),
@@ -10,13 +9,20 @@ var app,
 ;
 
 mongoise.connect(config.db.uri).done(function () {
-    fs.readdirSync(__dirname + "/app/mod").forEach(function (file) {
+    config.models = {};
+    config.controllers = {};
+
+    fs.readdirSync(config.root + "/app/mod").forEach(function (file) {
         if (~file.indexOf(".js")) {
-            models[file.replace(/\.js$/, "")] = require(__dirname + "/app/mod/" + file)(mongoise.dbc);
+            config.models[file.replace(/\.js$/, "")] = require(config.root + "/app/mod/" + file)(mongoise.dbc);
         }
     });
 
-    config.models = models;
+    fs.readdirSync(config.root + "/app/cont").forEach(function (file) {
+        if (~file.indexOf(".js")) {
+            config.controllers[file.replace(/\.js$/, "")] = require(config.root + "/app/cont/" + file)(config);
+        }
+    });
 
     app = express();
 
