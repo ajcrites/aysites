@@ -16,10 +16,12 @@ mongoise.connect(config.db.uri).done(function () {
         }
     });
 
+    config.models = models;
+
     app = express();
 
     require("./config/express")(app, config);
-    require("./config/routes")(app, models);
+    require("./config/routes")(app, config);
 
     app.set("port", process.env.PORT || 3000);
 

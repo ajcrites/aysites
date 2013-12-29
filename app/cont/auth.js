@@ -1,8 +1,8 @@
-module.exports = function (app, models) {
+module.exports = function (config) {
     return {
         login: {
             post: function (req, res) {
-                models.User.login(req.body.name, req.body.passwd)
+                config.models.User.login(req.body.name, req.body.passwd)
                     .done(function (user) {
                         res.json({"success": user});
                     })
