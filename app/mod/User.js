@@ -3,15 +3,13 @@
  */
 
 module.exports = function (db) {
-    var mongodb = require("mongodb"),
-        ObjectID = mongodb.ObjectID,
-        bcrypt = require("bcrypt"),
+    var bcrypt = require("bcrypt"),
         mongoise = require("mongoise"),
         Deferred = mongoise.Deferred,
         collection
     ;
     mongoise = new mongoise.Mongoise(db);
-    collection = mongoise.collection("user")
+    collection = mongoise.collection("user");
 
     return {
         /**
