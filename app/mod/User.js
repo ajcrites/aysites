@@ -30,7 +30,11 @@ module.exports = function (db) {
                                 collection.insert({
                                     name: name,
                                     passwd: digest,
-                                    email: email
+                                    email: email,
+                                    branches: [{
+                                        name: "<TRUNK>",
+                                        sites: []
+                                    }]
                                 })
                                     .done(function () {
                                         dfd.resolve.apply(dfd, arguments);
