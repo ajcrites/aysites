@@ -1,5 +1,5 @@
 var env = process.env.NODE_ENV || "test",
-    config = require("../config/config")[env],
+    config = require("../../config/config")[env],
     should = require("should"),
     MongoClient = require("mongodb").MongoClient,
     mongoise = require("mongoise"),
@@ -10,7 +10,7 @@ mongoise = new mongoise.Mongoise;
 describe("User", function () {
     before(function (done) {
         mongoise.connect(config.db.uri).done(function (db) {
-            User = require("../app/mod/User")(db);
+            User = require("../../app/mod/User")(db);
             mongoise.dbc.collection("user").drop(function () {
                 mongoise.dbc.createCollection("user", done);
             });
@@ -75,6 +75,34 @@ describe("User", function () {
         it("should not find a missing user", function (done) {
             User.find({name: "this does not exist"}).done(function (results) {
                 results.should.be.empty;
+                done();
+            });
+        });
+    });
+
+    describe("authenticate", function () {
+        before(function (done) {
+            User.create("bazze", "foo", "foo@aysites.com").done(function () {
+                done();
+            });
+        });
+
+        it("should not authenticate invalid password", function (done) {
+            User.login("bazze", "not foo").done(function (result) {
+                should.not.exist(result);
+                done();
+            }).fail(function (err) {
+                err.should.match(/Invalid.*combination/);
+                done();
+            });
+        });
+
+        it("should authenticate with valid password", function (done) {
+            User.login("bazze", "foo").done(function (result) {
+                should.exist(result);
+                done();
+            }).fail(function (err) {
+                should.not.exist(err);
                 done();
             });
         });

@@ -51,6 +51,32 @@ module.exports = function (db) {
 
         find: function (query) {
             return collection.find(query).toArray();
+        },
+
+        /**
+         * Log the provided username in by comparing the provided password
+         * to the stored hash
+         *
+         * @return document for the user
+         */
+        login: function (name, passwd) {
+            var dfd = new Deferred;
+
+            collection.findOne({name: name}).done(function (user) {
+                bcrypt.compare(passwd, user.passwd, function (err, res) {
+                    if (err) {
+                        dfd.reject(err);
+                    }
+                    else if (!res) {
+                        dfd.reject("Invalid username/password combination");
+                    }
+                    else {
+                        dfd.resolve(user);
+                    }
+                });
+            }).fail(dfd.reject);
+
+            return dfd.promise;
         }
     }
 };
