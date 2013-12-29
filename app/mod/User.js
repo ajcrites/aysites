@@ -1,3 +1,7 @@
+/**
+ * User CRUD model
+ */
+
 module.exports = function (db) {
     var mongodb = require("mongodb"),
         ObjectID = mongodb.ObjectID,
@@ -10,6 +14,14 @@ module.exports = function (db) {
     collection = mongoise.collection("user")
 
     return {
+        /**
+         * Create a user with the provided name/password/email
+         * @param string must be unique and at least 5 characters
+         * @param string
+         * @param string
+         *
+         * No validation is done on password (ever) or email (for now)
+         */
         create: function (name, passwd, email) {
             var dfd = new Deferred;
 
@@ -31,10 +43,11 @@ module.exports = function (db) {
                                     name: name,
                                     passwd: digest,
                                     email: email,
-                                    branches: [{
-                                        name: "<TRUNK>",
+                                    // This is the <TRUNK>
+                                    branches: {
+                                        branches: {},
                                         sites: []
-                                    }]
+                                    }
                                 })
                                     .done(function () {
                                         dfd.resolve.apply(dfd, arguments);
@@ -60,8 +73,6 @@ module.exports = function (db) {
         /**
          * Log the provided username in by comparing the provided password
          * to the stored hash
-         *
-         * @return document for the user
          */
         login: function (name, passwd) {
             var dfd = new Deferred;
