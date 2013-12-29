@@ -1,5 +1,5 @@
 module.exports = function (app, config) {
-    var c = config.controllers,
+        var c = config.controllers,
         auth = require(config.root + "/app/mid/auth");
 
     /**
@@ -9,5 +9,6 @@ module.exports = function (app, config) {
      */
     app.get(/(?:)/, c.index.index);
 
-    app.post("/auth/login", auth.auth(false), c.auth.login.post);
+    app.post("/auth", auth.auth(false), c.auth.login);
+    app.post("/user", auth.auth(false), c.user.create);
 };

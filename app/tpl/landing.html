@@ -20,7 +20,7 @@
                 </hgroup>
                 <nav class=inline>
                     <div class="margin-left float-left">
-                        <form id=signin class=inline method=post action=/auth/login>
+                        <form id=signin class=inline method=post action=/auth>
                             Sign In:&nbsp;&nbsp;&nbsp;&nbsp;
                             <label for=user>Username</label>
                                 <input id=user autofocus required type=text name=user>
@@ -43,11 +43,11 @@
             <div>
                 <section class="float-right index-create" id=create>
                     <header><h3 class="login-title bigger">Get Started with AySites</h3></header>
-                    <form method=post action=/usr/create>
+                    <form method=post action=/user>
                         <label><span>Username:</span>
-                                <input type=text name=username required>
+                            <input type=text name=name required>
                         </label><br>
-                        <label><span>Password:</span> <input type=password name=password required></label><br>
+                        <label><span>Password:</span> <input type=password name=passwd required></label><br>
                         <label><span>Email:</span> <input type=email name=email required></label><br>
                         <div style="text-align: center;"><input type=submit value="Sign Up for FREE"></div>
                     </form>
