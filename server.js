@@ -1,4 +1,5 @@
 var app,
+    models = {},
     express = require("express"),
     http = require("http"),
     fs = require("fs"),
@@ -11,14 +12,14 @@ var app,
 mongoise.connect(config.db.uri).done(function () {
     fs.readdirSync(__dirname + "/app/mod").forEach(function (file) {
         if (~file.indexOf(".js")) {
-            require(__dirname + "/app/mod/" + file)(mongoise.dbc);
+            models[file.replace(/\.js$/, "")] = require(__dirname + "/app/mod/" + file)(mongoise.dbc);
         }
     });
 
     app = express();
 
     require("./config/express")(app, config);
-    require("./config/routes")(app);
+    require("./config/routes")(app, models);
 
     app.set("port", process.env.PORT || 3000);
 

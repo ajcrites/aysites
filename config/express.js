@@ -23,7 +23,7 @@ module.exports = function (app, config) {
         app.use(express.methodOverride());
         app.use(express.json());
         app.use(express.cookieParser());
-        app.use(express.session());
+        app.use(express.session({secret: config.secret}));
         app.use(app.router);
     });
 
