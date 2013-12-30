@@ -2,10 +2,10 @@
  * Model for managing addition, removal, and updating of sites
  */
 
-module.exports = function (user, db) {
+module.exports = function (db) {
     var mongoise = require("mongoise"),
         http = require("http"),
-        Deferred = mongoise.Deferred
+        Deferred = mongoise.Deferred,
         collection
     ;
     mongoise = new mongoise.Mongoise(db);

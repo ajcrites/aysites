@@ -1,7 +1,7 @@
 var env = process.env.NODE_ENV || "test",
     config = require("../../config/config")[env],
     should = require("should"),
-    site = require("../../app/mod/Site")
+    site = require("../../app/mod/Site")()
 ;
 
 describe("Site", function () {
