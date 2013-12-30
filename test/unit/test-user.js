@@ -10,7 +10,8 @@ mongoise = new mongoise.Mongoise;
 describe("User", function () {
     before(function (done) {
         mongoise.connect(config.db.uri).done(function (db) {
-            User = require("../../app/mod/User")(db);
+            config.dbc = db;
+            User = require("../../app/mod/User")(config);
             mongoise.dbc.collection("user").drop(function () {
                 mongoise.dbc.createCollection("user", done);
             });

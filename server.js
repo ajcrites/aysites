@@ -11,10 +11,11 @@ var app,
 mongoise.connect(config.db.uri).done(function () {
     config.models = {};
     config.controllers = {};
+    config.dbc = mongoise.dbc;
 
     fs.readdirSync(config.root + "/app/mod").forEach(function (file) {
         if (~file.indexOf(".js")) {
-            config.models[file.replace(/\.js$/, "")] = require(config.root + "/app/mod/" + file)(mongoise.dbc);
+            config.models[file.replace(/\.js$/, "")] = require(config.root + "/app/mod/" + file)(config);
         }
     });
 

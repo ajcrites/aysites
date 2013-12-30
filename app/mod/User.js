@@ -2,13 +2,13 @@
  * User CRUD model
  */
 
-module.exports = function (db) {
+module.exports = function (config) {
     var bcrypt = require("bcrypt"),
         mongoise = require("mongoise"),
         Deferred = mongoise.Deferred,
         collection
     ;
-    mongoise = new mongoise.Mongoise(db);
+    mongoise = new mongoise.Mongoise(config.dbc);
     collection = mongoise.collection("user");
 
     return {
@@ -32,7 +32,7 @@ module.exports = function (db) {
                         dfd.reject("Name must be unique.  Provided name exists.");
                     }
                     else {
-                        bcrypt.hash(passwd, 10, function (err, digest) {
+                        bcrypt.hash(passwd, config.hashIter, function (err, digest) {
                             if (err) {
                                 dfd.reject("Unable to create bcrypt digest.  WTF!");
                             }
