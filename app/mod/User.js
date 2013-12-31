@@ -40,15 +40,12 @@ module.exports = function (config) {
                                 collection.insert({
                                     name: name,
                                     passwd: digest,
-                                    email: email,
-                                    // This is the <TRUNK>
-                                    branches: {
-                                        branches: {},
-                                        sites: []
-                                    }
+                                    email: email
                                 })
-                                    .done(function () {
-                                        dfd.resolve.apply(dfd, arguments);
+                                    .done(function (user) {
+                                        config.models.UserBranch.addBranch(user[0]._id, user[0].name).done(function () {
+                                            dfd.resolve.apply(dfd, arguments);
+                                        });
                                     })
                                     .fail(function () {
                                         dfd.reject.apply(dfd.arguments);

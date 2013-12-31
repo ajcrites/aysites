@@ -1,30 +1,11 @@
 var app,
     express = require("express"),
     http = require("http"),
-    fs = require("fs"),
     env = process.env.NODE_ENV || "development",
-    config = require("./config/config")[env],
-    mongoisePackage = require("mongoise"),
-    mongoise = new mongoisePackage.Mongoise
+    config = require("./config/config")[env]
 ;
 
-mongoise.connect(config.db.uri).done(function () {
-    config.models = {};
-    config.controllers = {};
-    config.dbc = mongoise.dbc;
-
-    fs.readdirSync(config.root + "/app/mod").forEach(function (file) {
-        if (~file.indexOf(".js")) {
-            config.models[file.replace(/\.js$/, "")] = require(config.root + "/app/mod/" + file)(config);
-        }
-    });
-
-    fs.readdirSync(config.root + "/app/cont").forEach(function (file) {
-        if (~file.indexOf(".js")) {
-            config.controllers[file.replace(/\.js$/, "")] = require(config.root + "/app/cont/" + file)(config);
-        }
-    });
-
+require("./config/init")(config).done(function () {
     app = express();
 
     require("./config/express")(app, config);
@@ -35,5 +16,4 @@ mongoise.connect(config.db.uri).done(function () {
     http.createServer(app).listen(app.get("port"), function(){
         console.log("Express server listening on port " + app.get("port"));
     });
-
 });

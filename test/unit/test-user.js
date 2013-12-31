@@ -1,19 +1,15 @@
 var env = process.env.NODE_ENV || "test",
-    config = require("../../config/config")[env],
     should = require("should"),
-    MongoClient = require("mongodb").MongoClient,
-    mongoise = require("mongoise"),
+    config = require("../../config/config")[env],
     User
 ;
-mongoise = new mongoise.Mongoise;
 
 describe("User", function () {
     before(function (done) {
-        mongoise.connect(config.db.uri).done(function (db) {
-            config.dbc = db;
-            User = require("../../app/mod/User")(config);
-            mongoise.dbc.collection("user").drop(function () {
-                mongoise.dbc.createCollection("user", done);
+        require("../../config/init")(config).done(function () {
+            config.dbc.collection("user").drop(function () {
+                User = config.models.User;
+                done();
             });
         });
     });

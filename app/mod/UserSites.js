@@ -9,10 +9,16 @@ module.exports = function (config) {
         collection
     ;
     mongoise = new mongoise.Mongoise(config.dbc);
-    collection = mongoise.collection("user");
+    collection = mongoise.collection("site");
 
     return {
         add: function (url) {
+            collection.findOne({url: url}).done(function () {
+                var site;
+                if (arguments[0]) {
+                    site = arguments[0];
+                }
+            });
         }
     };
 };

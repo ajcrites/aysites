@@ -7,9 +7,12 @@ Branches
  * + children: []
  * + sites: [Sites] -- ordinal
 Sites
+ * + user: Users
  * + url
  * title
  * + tags: [Tags]
+ * img
+ * private
 Tags
  * + user: Users
  * + name
