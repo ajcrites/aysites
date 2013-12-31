@@ -3,12 +3,12 @@
  */
 
 module.exports = function (config) {
-    var mongoise = require("mongoise"),
-        Deferred = mongoise.Deferred,
+    var monqoise = require("monqoise"),
+        Deferred = monqoise.Deferred,
         collection
     ;
-    mongoise = new mongoise.Mongoise(config.dbc);
-    collection = mongoise.collection("branch");
+    monqoise = new monqoise.Monqoise(config.dbc);
+    collection = monqoise.collection("branch");
 
     return {
         addBranch: function (user, name) {

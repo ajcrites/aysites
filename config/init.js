@@ -1,26 +1,28 @@
 var fs = require("fs"),
-    mongoisePackage = require("mongoise"),
-    mongoise = new mongoisePackage.Mongoise;
+    monqoisePackage = require("monqoise"),
+    Q = require("q"),
+    monqoise = new monqoisePackage.Monqoise;
 
 module.exports = function (config) {
-    var dfd = new mongoisePackage.Deferred;
-    mongoise.connect(config.db.uri).done(function () {
+    var dfd = Q.defer();
+
+    monqoise.connect(config.db.uri).then(function () {
         config.models = {};
         config.controllers = {};
-        config.dbc = mongoise.dbc;
+        config.dbc = monqoise.dbc;
 
-        return mongoisePackage.when(
-            mongoise.collection("user").ensureIndex({name: 1}, {unique: true}),
-            mongoise.collection("user").ensureIndex({branches: 1}),
-            mongoise.collection("branch").ensureIndex({user: 1}),
-            mongoise.collection("branch").ensureIndex({name: 1}),
-            mongoise.collection("branch").ensureIndex({name: 1, user: 1}, {unique: true}),
-            mongoise.collection("branch").ensureIndex({children: 1}),
-            mongoise.collection("branch").ensureIndex({sites: 1}),
-            mongoise.collection("site").ensureIndex({user: 1}),
-            mongoise.collection("site").ensureIndex({url: 1}),
-            mongoise.collection("site").ensureIndex({url: 1, user: 1}, {unique: true})
-        ).done(function () {
+        Q.all([
+            monqoise.collection("user").ensureIndex({name: 1}, {unique: true}),
+            monqoise.collection("user").ensureIndex({branches: 1}),
+            monqoise.collection("branch").ensureIndex({user: 1}),
+            monqoise.collection("branch").ensureIndex({name: 1}),
+            monqoise.collection("branch").ensureIndex({name: 1, user: 1}, {unique: true}),
+            monqoise.collection("branch").ensureIndex({children: 1}),
+            monqoise.collection("branch").ensureIndex({sites: 1}),
+            monqoise.collection("site").ensureIndex({user: 1}),
+            monqoise.collection("site").ensureIndex({url: 1}),
+            monqoise.collection("site").ensureIndex({url: 1, user: 1}, {unique: true})
+        ]).then(function () {
             fs.readdirSync(config.root + "/app/mod").forEach(function (file) {
                 if (~file.indexOf(".js")) {
                     config.models[file.replace(/\.js$/, "")] = require(config.root + "/app/mod/" + file)(config);
@@ -34,6 +36,8 @@ module.exports = function (config) {
             });
 
             dfd.resolve();
+        }).fail(function () {
+            dfd.reject(arguments[0]);
         });
     });
 

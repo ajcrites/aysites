@@ -1,12 +1,12 @@
 module.exports = function (db) {
     var request = require("request"),
-        mongoise = require("mongoise")
+        Q = require("q")
     ;
 
     return {
         find: function (url) {
             var title,
-                dfd = new mongoise.Deferred
+                dfd = Q.defer()
             ;
 
             request.get({url: url, followRedirect: false}, function (err, response, body) {
@@ -27,10 +27,11 @@ module.exports = function (db) {
                         else {
                             title = url;
                         }
-                        dfd.resolve(title,
-                            response.statusCode >= 300 && response.statusCode < 400
+                        dfd.resolve({
+                            title: title,
+                            forward: response.statusCode >= 300 && response.statusCode < 400
                             ? response.headers.location : null
-                        );
+                        });
                     }
                 }
             });

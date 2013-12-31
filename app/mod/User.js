@@ -4,12 +4,12 @@
 
 module.exports = function (config) {
     var bcrypt = require("bcrypt"),
-        mongoise = require("mongoise"),
-        Deferred = mongoise.Deferred,
+        monqoise = require("monqoise"),
+        Q = require("q"),
         collection
     ;
-    mongoise = new mongoise.Mongoise(config.dbc);
-    collection = mongoise.collection("user");
+    monqoise = new monqoise.Monqoise(config.dbc);
+    collection = monqoise.collection("user");
 
     return {
         /**
@@ -21,13 +21,13 @@ module.exports = function (config) {
          * No validation is done on password (ever) or email (for now)
          */
         create: function (name, passwd, email) {
-            var dfd = new Deferred;
+            var dfd = Q.defer();
 
             if (name.length < 5) {
                 dfd.reject("Name must be at least 5 characters long.");
             }
             else {
-                collection.find({name: name}).toArray().done(function (result) {
+                collection.find({name: name}).toArray().then(function (result) {
                     if (result.length) {
                         dfd.reject("Name must be unique.  Provided name exists.");
                     }
@@ -42,8 +42,8 @@ module.exports = function (config) {
                                     passwd: digest,
                                     email: email
                                 })
-                                    .done(function (user) {
-                                        config.models.UserBranch.addBranch(user[0]._id, user[0].name).done(function () {
+                                    .then(function (user) {
+                                        config.models.UserBranch.addBranch(user[0]._id, user[0].name).then(function () {
                                             dfd.resolve.apply(dfd, arguments);
                                         });
                                     })
@@ -70,9 +70,9 @@ module.exports = function (config) {
          * to the stored hash
          */
         login: function (name, passwd) {
-            var dfd = new Deferred;
+            var dfd = Q.defer();
 
-            collection.findOne({name: name}).done(function (user) {
+            collection.findOne({name: name}).then(function (user) {
                 if (!user) {
                     dfd.reject("Invalid username/password combination");
                 }
