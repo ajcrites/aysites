@@ -5,19 +5,16 @@ module.exports = function (db) {
 
     return {
         find: function (url) {
-            var title,
-                dfd = Q.defer()
-            ;
+            var title;
 
-            request.get({url: url, followRedirect: false}, function (err, response, body) {
-                if (err) {
-                    dfd.reject(err);
-                }
-                else {
+            return Q.ninvoke(request, "get", {url: url, followRedirect: false})
+                .then(function (result) {
+                    var response = result[0],
+                        body = result[1];
                     if (response.statusCode >= 400
                         && response.statusCode < 600
                     ) {
-                        dfd.reject(response.statusCode);
+                        throw response.statusCode;
                     }
                     else {
                         title = body.match(/<title[\s\S]*?>([\s\S]*?)<\/title/);
@@ -27,16 +24,13 @@ module.exports = function (db) {
                         else {
                             title = url;
                         }
-                        dfd.resolve({
+                        return {
                             title: title,
                             forward: response.statusCode >= 300 && response.statusCode < 400
                             ? response.headers.location : null
-                        });
+                        };
                     }
-                }
-            });
-
-            return dfd.promise;
+                });
         }
     }
 }
